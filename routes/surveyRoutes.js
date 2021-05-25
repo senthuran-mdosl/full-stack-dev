@@ -1,7 +1,9 @@
+const _ = require('lodash');
+const Path = require('path-parser');
+const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
-const Mailer = require('../services/Mailer');
 const Mailer = require('../services/Mailer');
 const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 
@@ -13,9 +15,23 @@ module.exports = app => {
     });
 
     app.post('/api/surveys/webooks', (res,req) => {
-        console.log(req.body);
+       const events = _.chain(requ.body)
+        .map( ({ email, url }) => {
+            const p = new Path('/api/surveys/:surveyId/:choice');
+            const match = p.test(new URL(url).pathname);
+            if (match) {
+                return { email, surveyId: match.surveyId, choice: match.choice };
+            }
+        })
+
+        .compact()
+        .uniqBy('email', 'surveyId')
+        .value();
+
+        console.log(events);
+
         res.send({});
-        });
+    });
 
 
     app.post('/api/surveys', requireLogin, requireCredits, async (res,req) => {

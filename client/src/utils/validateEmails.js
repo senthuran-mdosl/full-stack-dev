@@ -1,5 +1,3 @@
-import { isValidElement } from "react";
-
 const re = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 export default (emails) => {
@@ -7,7 +5,6 @@ export default (emails) => {
 
     if(invalidEmails.length) {
         return `These emails are invalid: ${invalidEmails}`;
-
-        return;
     }
+    return;
 };

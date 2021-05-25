@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { Compomenent } from 'react';
+import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { Link } from 'react-router-dom';
 import SurveyField from './SurveyField';
@@ -37,7 +37,7 @@ function validate(values){
     errors.recipients = validateEmails(values.recipients || '');
 
     _.each(formFields,({name}) => {
-        if(!value[name]){
+        if(!values[name]){
             errors[name] = 'You must provide a value'
         };
     });
