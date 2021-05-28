@@ -15,7 +15,7 @@ module.exports = app => {
     });
 
     app.post('/api/surveys/webooks', (res,req) => {
-       const events = _.chain(requ.body)
+       _.chain(requ.body)
         .map( ({ email, url }) => {
             const p = new Path('/api/surveys/:surveyId/:choice');
             const match = p.test(new URL(url).pathname);
@@ -26,9 +26,20 @@ module.exports = app => {
 
         .compact()
         .uniqBy('email', 'surveyId')
+        .each(({ surveyId, email, choice }) => {email = '';
+        choice = 'yes' || 'no';
+        
+        Survey.updateOne({
+            _id: surveyId,
+            recipients: {
+                $elemMatch: { email: email, responded: false }
+            }
+        }, {
+            $inc: { [choice]: 1 },
+            $set: { 'recipients.$.responded': true }
+        }).exec();
+    })
         .value();
-
-        console.log(events);
 
         res.send({});
     });
