@@ -14,6 +14,7 @@ module.exports = app => {
         );
 
     app.get('/api/logout', (res,req) => {
+        //tried several changes but still internal server error persistent
         req.logout();
         res.redirect('/');
     });
